@@ -4,10 +4,10 @@ var request = require("request");
 
 function NetworkRequest(){
 
-  this.send(url, method, params, errorCallback, successCallback, options){
+  this.send = function(url, method, params, errorCallback, successCallback, options){
 
     var reqOptions = options;
-    if(!reqOptions){
+    if(!options){
 
       reqOptions = {
         method: method,

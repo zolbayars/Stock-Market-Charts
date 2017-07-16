@@ -26,10 +26,8 @@
 
   $.ajax({
     type: 'GET',
-    url: '/stocks',
-    data: {
-      symbols: 'AMZN,AAPL,GOOGL',
-    },
+    url: '/stocks/AMZN,AAPL,GOOGL',
+    data: {},
     success: function(response) {
       console.log(response);
     },
@@ -86,7 +84,7 @@
         .attr("dy", "0.35em")
         .style("font", "10px sans-serif")
         .text(function(d) { return d.id; });
-  });
+  }
 
   function type(d, _, columns) {
     d.date = parseTime(d.date);

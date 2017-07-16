@@ -1,7 +1,7 @@
-'use strict'
+'use strict';
 
 var path = process.cwd();
-var StockController = require(process.cwd() + "/app/controllers/stockController.server.js");
+var StockController = require(path + "/app/controllers/stockController.server.js");
 
 module.exports = function(app){
 
@@ -12,9 +12,7 @@ module.exports = function(app){
       res.render('home');
     });
 
-  app.route('/stocks')
-    .get(function(req, res){
-      stockController.getStocksInfo; 
-    });
+  app.route('/stocks/:symbols')
+    .get(stockController.getStocksInfo);
 
 }
