@@ -26,27 +26,16 @@
 
   $.ajax({
     type: 'GET',
-    url: 'https://www.alphavantage.co/query',
+    url: '/stocks',
     data: {
-      function: 'TIME_SERIES_DAILY',
-      symbol: 'AMZN',
-      apikey: 'Y0W8FJVMBZ4PGPYU'
+      symbols: 'AMZN,AAPL,GOOGL',
     },
     success: function(response) {
-      var obj = response['Time Series (Daily)'];
-      var result = getDailyData(obj);
-      result = result.slice(50,result.length);
-
-      svg.append("g")
-              .attr("class", "candlestickS");
-
-      svg.selectAll("g.candlestickS").datum(result).call(candlestick);
+      console.log(response);
     },
   });
 
-  d3.tsv("data.tsv", type, function(error, data) {
-    if (error) throw error;
-
+  function drawChart(data) {
     var cities = data.columns.slice(1).map(function(id) {
       return {
         id: id,
