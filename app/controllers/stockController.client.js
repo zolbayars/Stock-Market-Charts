@@ -13,7 +13,8 @@
     height = svg.attr("height") - margin.top - margin.bottom,
     g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-  var parseTime = d3.timeParse("%Y%m%d");
+  // var parseTime = d3.timeParse("%Y%m%d");
+  var parseDate = d3.timeParse("%Y-%m-%d");
 
   var x = d3.scaleTime().range([0, width]),
       y = d3.scaleLinear().range([height, 0]),
@@ -26,24 +27,28 @@
 
   $.ajax({
     type: 'GET',
-    url: '/stocks/AMZN,AAPL,GOOGL',
+    url: '/stocks/GOOGL,AMZN',
     data: {},
     success: function(response) {
       console.log(response);
+      drawChart(response);
     },
   });
 
   function drawChart(data) {
-    var cities = data.columns.slice(1).map(function(id) {
+    var cities = data.map(function(infoArray, index) {
+      console.log(infoArray);
       return {
-        id: id,
-        values: data.map(function(d) {
-          return {date: d.date, temperature: d[id]};
+        id: index,
+        values: infoArray.map(function(d) {
+          return {date: parseDate(d.date), temperature: d.open};
         })
       };
     });
 
-    x.domain(d3.extent(data, function(d) { return d.date; }));
+    // var cities = data;
+
+    x.domain(d3.extent(data[0], function(d) { return parseDate(d.date); }));
 
     y.domain([
       d3.min(cities, function(c) { return d3.min(c.values, function(d) { return d.temperature; }); }),
@@ -65,7 +70,7 @@
         .attr("y", 6)
         .attr("dy", "0.71em")
         .attr("fill", "#000")
-        .text("Temperature, ºF");
+        .text("Opening price");
 
     var city = g.selectAll(".city")
       .data(cities)
@@ -82,12 +87,12 @@
         .attr("transform", function(d) { return "translate(" + x(d.value.date) + "," + y(d.value.temperature) + ")"; })
         .attr("x", 3)
         .attr("dy", "0.35em")
-        .style("font", "10px sans-serif")
+        .style("font", "12px sans-serif")
         .text(function(d) { return d.id; });
   }
 
   function type(d, _, columns) {
-    d.date = parseTime(d.date);
+    d.date = parseDate(d.date);
     for (var i = 1, n = columns.length, c; i < n; ++i) d[c = columns[i]] = +d[c];
     return d;
   }
